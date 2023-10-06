@@ -82,14 +82,16 @@ class UpdateOnBoardingSurvey(WalkMeReportUpdateFile):
     def clean_data(self):
         # You can modify this method based on your cleaning requirements
         df = pd.read_csv(self.csv_path)
+        print("\nData to cleaned\n", df.head())
         
         # 1 drop columns Number of Survey Submittals & Number of Survey Plays \\
         # 2 add QuestionDate&Time(Eastern) next to QuestionDate&Time(UTC) just copy same value -4 hours \\ 
         # 3 move Quesstion to the last column
-        df = df.drop(columns=['Number of Survey Submittals', 'Number of Survey Plays'])
+        df = df.drop(columns='Number of Survey Submittals') 
+        df = df.drop(columns='Number of Survey Plays')
         # copy QuestionDate&Time(UTC) to QuestionDate&Time(Eastern) - 4H
-        df['QuestionDate&Time(UTC)'] = pd.to_datetime(df['QuestionDate&Time(UTC)'])
-        df['QuestionDate&Time(Eastern)'] = df['QuestionDate&Time(UTC)'] - pd.Timedelta(hours=4)
+        df['Question Date & Time (UTC)'] = pd.to_datetime(df['Question Date & Time (UTC)'])
+        df['QuestionDate&Time(Eastern)'] = df['Question Date & Time (UTC)'] - pd.Timedelta(hours=4)
         # Move QuestionDate&Time(Eastern) to the second column
         colEsternDate = df.pop('QuestionDate&Time(Eastern)')
         df.insert(4, colEsternDate.name, colEsternDate)
@@ -97,7 +99,9 @@ class UpdateOnBoardingSurvey(WalkMeReportUpdateFile):
         colQuestion = df.pop('Question')
         df.insert(len(df.columns), colQuestion.name, colQuestion)
         # Order by QuestionDate&Time(UTC)
-        df = df.sort_values(by=['QuestionDate&Time(UTC)'])
+        df = df.sort_values(by=['Question Date & Time (UTC)'])
+        #Remove the empty spaces in the column names
+        df.columns = df.columns.str.replace(' ', '')
         print("\nData cleaned\n", df.head())
         print(f"Data cleaned for {self.csv_path}")
         return df
@@ -110,7 +114,7 @@ class UpdateOnBoardingSurvey(WalkMeReportUpdateFile):
         new_data = self.clean_data()
         # add the id column to the new data continue the numbering
         for rowNumber in range(1,len(new_data)+1):
-            new_data['ID'] = df['ID'].max() + rowNumber
+            new_data['Id'] = df['Id'].max() + rowNumber
         df= pd.concat([df, new_data], ignore_index=True)
         return actual_file_path, df
         #NEED TO ADD THE ID NUMBER FOLLOWING THE ORIGINAL FILE (CONTINUE THE NUMBERING)
@@ -122,6 +126,8 @@ class UpdateOnBoardingSurveyViews(WalkMeReportUpdateFile):
         df = pd.read_csv(actual_file_path)
         # add new data to the end of the file
         new_data = self.clean_data()
+        #Remove the empty spaces in the column names
+        new_data.columns = new_data.columns.str.replace(' ', '')
         df= pd.concat([df, new_data], ignore_index=True)
         #Sum up the values for each AccountName
         df = df.groupby(['AccountName']).sum()
@@ -129,7 +135,13 @@ class UpdateOnBoardingSurveyViews(WalkMeReportUpdateFile):
         return actual_file_path, df
 
 class UpdateOnBoardingSurveyComment(WalkMeReportUpdateFile):
-    pass
+    def clean_data(self):
+        # You can modify this method based on your cleaning requirements
+        df = pd.read_csv(self.csv_path)
+        #Remove the empty spaces in the column names
+        df.columns = df.columns.str.replace(' ', '')
+        print(f"Data cleaned for {self.csv_path}")
+        return df
 
 class UpdateOnBoardingSurveyTeachMe(WalkMeReportUpdateFile):
     pass # TO COME...#
@@ -146,13 +158,13 @@ class UpdateContinuousSatisfactionScore(WalkMeReportUpdateFile):
         
         # 1 add QuestionDate&Time(Eastern) next to QuestionDate&Time(UTC) just copy same value -4 hours \\ 
         # copy QuestionDate&Time(UTC) to QuestionDate&Time(Eastern) - 4H
-        df['QuestionDate&Time(UTC)'] = pd.to_datetime(df['QuestionDate&Time(UTC)'])
-        df['QuestionDate&Time(Eastern)'] = df['QuestionDate&Time(UTC)'] - pd.Timedelta(hours=4)
+        df['Question Date & Time (UTC)'] = pd.to_datetime(df['Question Date & Time (UTC)'])
+        df['QuestionDate&Time(Eastern)'] = df['Question Date & Time (UTC)'] - pd.Timedelta(hours=4)
         # Move QuestionDate&Time(Eastern) to the second column
         colEsternDate = df.pop('QuestionDate&Time(Eastern)')
         df.insert(4, colEsternDate.name, colEsternDate)
         # Order by QuestionDate&Time(UTC)
-        df = df.sort_values(by=['QuestionDate&Time(UTC)'])
+        df = df.sort_values(by=['Question Date & Time (UTC)'])
         print("\nData cleaned\n", df.head())
         print(f"Data cleaned for {self.csv_path}")
         return df
