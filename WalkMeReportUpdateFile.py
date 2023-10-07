@@ -130,8 +130,7 @@ class UpdateOnBoardingSurveyViews(WalkMeReportUpdateFile):
         new_data.columns = new_data.columns.str.replace(' ', '')
         df= pd.concat([df, new_data], ignore_index=True)
         #Sum up the values for each AccountName
-        df = df.groupby(['AccountName']).sum()
-
+        df = df.groupby(['AccountName']).sum().reset_index()
         return actual_file_path, df
 
 class UpdateOnBoardingSurveyComment(WalkMeReportUpdateFile):
@@ -165,7 +164,6 @@ class UpdateContinuousSatisfactionScore(WalkMeReportUpdateFile):
         df.insert(4, colEsternDate.name, colEsternDate)
         # Order by QuestionDate&Time(UTC)
         df = df.sort_values(by=['Question Date & Time (UTC)'])
-        print("\nData cleaned\n", df.head())
         print(f"Data cleaned for {self.csv_path}")
         return df
 

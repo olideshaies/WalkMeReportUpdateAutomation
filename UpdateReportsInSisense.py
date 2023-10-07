@@ -9,17 +9,18 @@ import os
 REPORT_CLASSES = {
     #ONBOARDING FILES#
     # "OnboardingSurveyComment": (UpdateOnBoardingSurveyComment, "OnboardingSurvey"),
-    "OnboardingSurvey": (UpdateOnBoardingSurvey, "OnboardingSurvey"),
-    # "OnboardingSurveyViews": (UpdateOnBoardingSurveyViews, "OnboardingSurvey"),
+     "OnboardingSurvey": (UpdateOnBoardingSurvey, "OnboardingSurvey"),
+     "OnboardingSurveyViews": (UpdateOnBoardingSurveyViews, "OnboardingSurvey"),
     #CONTINUOUS SATISFACTION SCORE FILES#
-    #"dbo.ContinuousSatisfactionScore": (UpdateContinuousSatisfactionScore, "ContinuousSatisfactionScore"),
+     "dbo.ContinuousSatisfactionScore": (UpdateContinuousSatisfactionScore, "ContinuousSatisfactionScore"),
     #NPS FILES#
     # NOT FOR NOW IF REACTIVATING need to change "the name of the survey segmentation"
     #(UNCOMMENT HERE)"dbo.NpsCampaign": (UpdateNPS, "NPS")
 }
 
 if __name__ == "__main__":
-    subjects_and_paths = fetch_csvs_from_today()
+    # Strip the ".csv" from the subject before processing
+    subjects_and_paths = [(subject.replace('.csv', ''), path) for subject, path in fetch_csvs_from_today()]
 
     for subject, csv_path in subjects_and_paths:
         print(f"Email Subject: {subject}")
@@ -28,8 +29,12 @@ if __name__ == "__main__":
         # Dynamically find and instantiate the matching class
         matched_class = None
         directory_group = None
+        
+        # Use word-matching logic to find the corresponding class
+        subject_words = set(subject.split())
         for key, (value, dir_group) in REPORT_CLASSES.items():
-            if key in subject:
+            key_words = set(key.split())
+            if key_words.issubset(subject_words):
                 matched_class = value
                 directory_group = dir_group
                 break
