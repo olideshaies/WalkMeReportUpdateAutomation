@@ -81,9 +81,7 @@ class WalkMeReportUpdateFile:
 class UpdateOnBoardingSurvey(WalkMeReportUpdateFile):
     def clean_data(self):
         # You can modify this method based on your cleaning requirements
-        df = pd.read_csv(self.csv_path)
-        print("\nData to cleaned\n", df.head())
-        
+        df = pd.read_csv(self.csv_path)        
         # 1 drop columns Number of Survey Submittals & Number of Survey Plays \\
         # 2 add QuestionDate&Time(Eastern) next to QuestionDate&Time(UTC) just copy same value -4 hours \\ 
         # 3 move Quesstion to the last column
@@ -102,7 +100,6 @@ class UpdateOnBoardingSurvey(WalkMeReportUpdateFile):
         df = df.sort_values(by=['Question Date & Time (UTC)'])
         #Remove the empty spaces in the column names
         df.columns = df.columns.str.replace(' ', '')
-        print("\nData cleaned\n", df.head())
         print(f"Data cleaned for {self.csv_path}")
         return df
 
@@ -112,9 +109,9 @@ class UpdateOnBoardingSurvey(WalkMeReportUpdateFile):
         df = pd.read_csv(actual_file_path)
         # add new data to the end of the file
         new_data = self.clean_data()
+        starting_id = df['Id'].max()
         # add the id column to the new data continue the numbering
-        for rowNumber in range(1,len(new_data)+1):
-            new_data['Id'] = df['Id'].max() + rowNumber
+        new_data['Id'] = [starting_id + i for i in range(1, len(new_data) + 1)]
         df= pd.concat([df, new_data], ignore_index=True)
         return actual_file_path, df
         #NEED TO ADD THE ID NUMBER FOLLOWING THE ORIGINAL FILE (CONTINUE THE NUMBERING)
