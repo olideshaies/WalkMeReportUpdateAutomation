@@ -7,6 +7,7 @@ class WalkMeReportUpdateFile:
     def __init__(self, directory_group, subject, csv_path):
         self.directory_group = directory_group
         self.subject = subject
+        #add general csv path and single survey csv path (modify the self.csv_path under to get repeated string in the csv path)
         self.csv_path = csv_path
         self.file_name = os.path.basename(csv_path)
         self.backup_path = r'\\vmsisense1\Sisense\ExternalDataFile'+ '\\' + directory_group 
@@ -40,6 +41,9 @@ class WalkMeReportUpdateFile:
         else:
             print(f"No existing file named {self.file_name} found in {self.backup_path} to backup.")
     
+    # Just need to add another function to merge csv files with similar name then output one csv file with the merged data to be use after
+    # 1. fetch all emails from today
+
     def clean_data(self):
         # You can modify this method based on your cleaning requirements
         df = pd.read_csv(self.csv_path)
@@ -61,14 +65,13 @@ class WalkMeReportUpdateFile:
         actual_file_path, updated_df = self.append_new_data()
         updated_df.to_csv(actual_file_path, index=False)
 
-
-    
     def log(self, message):
         # You can log to a file or just print out. Here's a simple print-based log.
         print(f"[{self.subject}]: {message}")
     
     def process(self):
         self.save_actual_file()
+        #self.merge_files()
         self.update_actual_file()
         self.log("Processing Complete")
 
@@ -117,6 +120,12 @@ class UpdateOnBoardingSurvey(WalkMeReportUpdateFile):
         #NEED TO ADD THE ID NUMBER FOLLOWING THE ORIGINAL FILE (CONTINUE THE NUMBERING)
 
 class UpdateOnBoardingSurveyViews(WalkMeReportUpdateFile):
+    def clean_data(self):
+        df = pd.read_csv(self.csv_path)
+        # Drop all rows with something in the column 'Question'
+        df = df[df['Question'].isnull()]
+        print(f"Data cleaned for {self.csv_path}")
+        return df
     def append_new_data(self):
         # Get actual file in Directory
         actual_file_path = os.path.join(self.backup_path, self.file_name)
@@ -126,8 +135,6 @@ class UpdateOnBoardingSurveyViews(WalkMeReportUpdateFile):
         #Remove the empty spaces in the column names
         new_data.columns = new_data.columns.str.replace(' ', '')
         df= pd.concat([df, new_data], ignore_index=True)
-        #Sum up the values for each AccountName
-        df = df.groupby(['AccountName']).sum().reset_index()
         return actual_file_path, df
 
 class UpdateOnBoardingSurveyComment(WalkMeReportUpdateFile):
