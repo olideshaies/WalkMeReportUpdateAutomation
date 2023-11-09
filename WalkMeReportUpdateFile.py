@@ -122,10 +122,34 @@ class UpdateOnBoardingSurvey(WalkMeReportUpdateFile):
 class UpdateOnBoardingSurveyViews(WalkMeReportUpdateFile):
     def clean_data(self):
         df = pd.read_csv(self.csv_path)
-        # Drop all rows with something in the column 'Question'
-        df = df[df['Question'].isnull()]
-        print(f"Data cleaned for {self.csv_path}")
+        # Drop all rows where both 'Users Viewed Surveys' and 'Users Submitted Surveys' are 1
+        df = df[~((df['Users Viewed Surveys'] == 1) & (df['Users Submitted Surveys'] == 1))]
+        # Get the viewers only
+        viewers_only = df[df['Users Submitted Surveys'] == 0]
+        # Drop the viewers only from the df
+        df = df[~(df['Users Submitted Surveys'] == 0)].reset_index(drop=True)
+        # Get the list of questions asked grouped by survey
+        question_by_survey = df.groupby('Survey ID')['Question'].apply(list).to_dict()
+        # Initialize an empty list to collect new rows
+        new_rows = []
+        # Iterate over viewers_only DataFrame
+        for _, viewer_row in viewers_only.iterrows():
+            survey_id = viewer_row['Survey ID']
+            # Get the list of unique questions for the survey ID
+            questions = list(set(question_by_survey.get(survey_id, [])))
+            # Create a new row for each unique question
+            for question in questions:
+                if question:  # Ensure the question is not empty
+                    new_row = viewer_row.copy()
+                    new_row['Question'] = question
+                    new_rows.append(new_row)
+
+        # Convert the list of new rows into a DataFrame
+        viewers_only_with_question = pd.DataFrame(new_rows)
+        # Append the new 'viewers only with question' rows to the df
+        df = pd.concat([df, viewers_only_with_question], ignore_index=True)
         return df
+
     def append_new_data(self):
         # Get actual file in Directory
         actual_file_path = os.path.join(self.backup_path, self.file_name)
