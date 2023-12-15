@@ -1,0 +1,14 @@
+2023-12-06 05:55:06,602 - INFO - Email Subject: OnboardingSurvey
+2023-12-06 05:55:06,602 - INFO - CSV File Path: temp_csv_files\OnboardingSurvey.csv
+2023-12-06 05:55:12,455 - INFO - Email Subject: OnboardingSurveryComment
+2023-12-06 05:55:12,455 - INFO - CSV File Path: temp_csv_files\OnboardingSurveryComment.csv
+2023-12-06 05:55:12,455 - WARNING - No matching class found for subject: OnboardingSurveryComment
+2023-12-06 05:55:12,455 - INFO - Email Subject: OnboardingSurveyNPS
+2023-12-06 05:55:12,455 - INFO - CSV File Path: temp_csv_files\OnboardingSurveyNPS.csv
+2023-12-06 05:55:12,455 - WARNING - No matching class found for subject: OnboardingSurveyNPS
+2023-12-06 05:55:12,455 - INFO - Email Subject: dbo.ContinuousSatisfactionScore
+2023-12-06 05:55:12,467 - INFO - CSV File Path: temp_csv_files\dbo.ContinuousSatisfactionScore.csv
+2023-12-06 05:55:30,424 - INFO - Email Subject: OnboardingSurveyViews
+2023-12-06 05:55:30,434 - INFO - CSV File Path: temp_csv_files\OnboardingSurveyViews.csv
+2023-12-06 05:55:37,679 - INFO - Temp_csv_files folder emptied
+2023-12-06 05:55:37,679 - INFO - All files processed

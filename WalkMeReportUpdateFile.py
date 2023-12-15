@@ -122,6 +122,8 @@ class UpdateOnBoardingSurvey(WalkMeReportUpdateFile):
 class UpdateOnBoardingSurveyViews(WalkMeReportUpdateFile):
     def clean_data(self):
         df = pd.read_csv(self.csv_path)
+        #Remove the rows with NPS Question : How likely are you to recommend MEDFAR to a colleague?
+        df = df[~(df['Question'] == 'How likely are you to recommend MEDFAR to a colleague?')]
         # Drop all rows where both 'Users Viewed Surveys' and 'Users Submitted Surveys' are 1
         df = df[~((df['Users Viewed Surveys'] == 1) & (df['Users Submitted Surveys'] == 1))]
         # Get the viewers only

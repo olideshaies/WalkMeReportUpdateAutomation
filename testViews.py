@@ -3,7 +3,10 @@ import pandas as pd
 
 
 def clean_data(csv_path):
+    
         df = pd.read_csv(csv_path)
+        #Remove the rows with NPS Question : How likely are you to recommend MEDFAR to a colleague?
+        df = df[~(df['Question'] == 'How likely are you to recommend MEDFAR to a colleague?')]
         # Drop all rows where both 'Users Viewed Surveys' and 'Users Submitted Surveys' are 1
         df = df[~((df['Users Viewed Surveys'] == 1) & (df['Users Submitted Surveys'] == 1))]
         # Get the viewers only
@@ -45,8 +48,10 @@ def append_new_data():
         return df
 
 
-df = append_new_data()
-df.to_csv('previews.csv', index=False)
+#df = append_new_data()
+df = clean_data('survey_views.csv')
+df.columns = df.columns.str.replace(' ', '')
+df.to_csv('OnboardingSurveyViews', index=False)
 
 
 
