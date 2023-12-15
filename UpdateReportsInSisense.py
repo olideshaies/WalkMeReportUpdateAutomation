@@ -24,6 +24,7 @@ REPORT_CLASSES = {
      "OnboardingSurveyComment": (UpdateOnBoardingSurveyComment, "OnboardingSurvey"),
      "OnboardingSurvey": (UpdateOnBoardingSurvey, "OnboardingSurvey"),
      "OnboardingSurveyViews": (UpdateOnBoardingSurveyViews, "OnboardingSurvey"),
+     "OnboardingSurveyNPS": (UpdateOnBoardingSurveyNPS, "OnboardingSurvey"),
     #CONTINUOUS SATISFACTION SCORE FILES#
      "dbo.ContinuousSatisfactionScore": (UpdateContinuousSatisfactionScore, "ContinuousSatisfactionScore"),
     #NPS FILES#

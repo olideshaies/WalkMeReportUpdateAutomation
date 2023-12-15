@@ -171,6 +171,45 @@ class UpdateOnBoardingSurveyComment(WalkMeReportUpdateFile):
         df.columns = df.columns.str.replace(' ', '')
         print(f"Data cleaned for {self.csv_path}")
         return df
+    
+class UpdateOnBoardingSurveyNPS(WalkMeReportUpdateFile):
+    def clean_data(self):
+        # You can modify this method based on your cleaning requirements
+        df = pd.read_csv(self.csv_path)        
+        # 1 drop columns Number of Survey Submittals & Number of Survey Plays \\
+        # 2 add QuestionDate&Time(Eastern) next to QuestionDate&Time(UTC) just copy same value -4 hours \\ 
+        # 3 move Quesstion to the last column
+        df = df.drop(columns='Number of Survey Submittals') 
+        df = df.drop(columns='Number of Survey Plays')
+        # copy QuestionDate&Time(UTC) to QuestionDate&Time(Eastern) - 4H
+        df['Question Date & Time (UTC)'] = pd.to_datetime(df['Question Date & Time (UTC)'])
+        df['QuestionDate&Time(Eastern)'] = df['Question Date & Time (UTC)'] - pd.Timedelta(hours=4)
+        # Move QuestionDate&Time(Eastern) to the second column
+        colEsternDate = df.pop('QuestionDate&Time(Eastern)')
+        df.insert(4, colEsternDate.name, colEsternDate)
+        # Move Question to the last column
+        colQuestion = df.pop('Question')
+        df.insert(len(df.columns), colQuestion.name, colQuestion)
+        # Order by QuestionDate&Time(UTC)
+        df = df.sort_values(by=['Question Date & Time (UTC)'])
+        #Remove the empty spaces in the column names
+        df.columns = df.columns.str.replace(' ', '')
+        print(f"Data cleaned for {self.csv_path}")
+        return df
+
+    def append_new_data(self):
+        # Get actual file in Directory
+        actual_file_path = os.path.join(self.backup_path, self.file_name)
+        df = pd.read_csv(actual_file_path)
+        # add new data to the end of the file
+        new_data = self.clean_data()
+        starting_id = df['Id'].max()
+        # add the id column to the new data continue the numbering
+        new_data['Id'] = [starting_id + i for i in range(1, len(new_data) + 1)]
+        df= pd.concat([df, new_data], ignore_index=True)
+        return actual_file_path, df
+        #NEED TO ADD THE ID NUMBER FOLLOWING THE ORIGINAL FILE (CONTINUE THE NUMBERING)
+
 
 class UpdateOnBoardingSurveyTeachMe(WalkMeReportUpdateFile):
     pass # TO COME...#
