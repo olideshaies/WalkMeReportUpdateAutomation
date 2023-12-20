@@ -132,6 +132,7 @@ class UpdateOnBoardingSurveyViews(WalkMeReportUpdateFile):
         df = df[~(df['Users Submitted Surveys'] == 0)].reset_index(drop=True)
         # Get the list of questions asked grouped by survey
         question_by_survey = df.groupby('Survey ID')['Question'].apply(list).to_dict()
+        
         # Initialize an empty list to collect new rows
         new_rows = []
         # Iterate over viewers_only DataFrame
