@@ -5,8 +5,6 @@ import pandas as pd
 def clean_data(csv_path):
     
         df = pd.read_csv(csv_path)
-        #Remove the rows with NPS Question : How likely are you to recommend MEDFAR to a colleague?
-        df = df[~(df['Question'] == 'How likely are you to recommend MEDFAR to a colleague?')]
         # Drop all rows where both 'Users Viewed Surveys' and 'Users Submitted Surveys' are 1
         df = df[~((df['Users Viewed Surveys'] == 1) & (df['Users Submitted Surveys'] == 1))]
         # Get the viewers only
@@ -15,6 +13,8 @@ def clean_data(csv_path):
         df = df[~(df['Users Submitted Surveys'] == 0)].reset_index(drop=True)
         # Get the list of questions asked grouped by survey
         question_by_survey = df.groupby('Survey ID')['Question'].apply(list).to_dict()
+        # Adding the Survey Id and Question from NPS to the viewers only
+
         # Initialize an empty list to collect new rows
         new_rows = []
         # Iterate over viewers_only DataFrame
@@ -40,7 +40,7 @@ def append_new_data():
         
         df = pd.read_csv(r'C:\Users\olivier.deshaies\Desktop\GIT\WalkMeReportUpdateAutomation\OnboardingSurveyViews.csv')
         # add new data to the end of the file
-        new_data = clean_data(r'C:\Users\olivier.deshaies\Desktop\GIT\WalkMeReportUpdateAutomation\Onb. Surveys - Answers Plays (No Filter) 20231108-20231108 - Copie.csv')
+        new_data = clean_data(r'C:\Users\olivier.deshaies\Desktop\GIT\WalkMeReportUpdateAutomation\Onb. Surveys.csv')
 
         #Remove the empty spaces in the column names
         new_data.columns = new_data.columns.str.replace(' ', '')
@@ -48,10 +48,10 @@ def append_new_data():
         return df
 
 
-#df = append_new_data()
-df = clean_data('survey_views.csv')
-df.columns = df.columns.str.replace(' ', '')
-df.to_csv('OnboardingSurveyViews', index=False)
+df = append_new_data()
+#df = clean_data('Onb. Surveys.csv')
+#df.columns = df.columns.str.replace(' ', '')
+df.to_csv('Real_OnboardingSurveyViews', index=False)
 
 
 
