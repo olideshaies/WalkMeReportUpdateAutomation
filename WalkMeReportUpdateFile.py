@@ -234,6 +234,7 @@ class UpdateContinuousSatisfactionScore(WalkMeReportUpdateFile):
         df = df.sort_values(by=['Question Date & Time (UTC)'])
         print(f"Data cleaned for {self.csv_path}")
         return df
+    
 
 
 
