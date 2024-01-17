@@ -1,6 +1,7 @@
 import os
 import shutil
 import pandas as pd
+import datetime
 from  EmailFetching.WalkMeReportFetchGmailCSV import fetch_csvs_from_today
 
 class WalkMeReportUpdateFile:
@@ -36,6 +37,11 @@ class WalkMeReportUpdateFile:
         existing_file_path = os.path.join(self.backup_path, self.file_name)
         if os.path.exists(existing_file_path):
             backup_target = self.get_backup_path()
+            yesterday_date = datetime.datetime.now() - datetime.timedelta(days=1)
+            yesterday_date_str = yesterday_date.strftime("%Y-%m-%d")
+            backup_file_name = f"{os.path.splitext(self.file_name)[0]}_{yesterday_date_str}{os.path.splitext(self.file_name)[1]}"
+            backup_target = os.path.join(os.path.dirname(backup_target), backup_file_name)
+            
             shutil.copy(existing_file_path, backup_target)
             print(f"Existing file backed up to: {backup_target}")
         else:

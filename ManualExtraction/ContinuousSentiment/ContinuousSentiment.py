@@ -40,7 +40,7 @@ print("║    Let's make data cleaning fun... or at least as fun as it can be!  
 print("║                                                                      ║")
 print("╚══════════════════════════════════════════════════════════════════════╝")
 
-print("Current Working Directory:", os.getcwd())
+
 
 # Get file names from user
 existing_file = input("\n📂 Enter the name of the existing data file (e.g., 'existing_data.csv'): ")
