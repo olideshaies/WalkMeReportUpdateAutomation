@@ -21,7 +21,7 @@ logger = logging.getLogger()
 
 REPORT_CLASSES = {
     #ONBOARDING FILES#
-     "OnboardingSurveyComment": (UpdateOnBoardingSurveyComment, "OnboardingSurvey"),
+     #"OnboardingSurveyComment": (UpdateOnBoardingSurveyComment, "OnboardingSurvey"),
      #"OnboardingSurvey": (UpdateOnBoardingSurvey, "OnboardingSurvey"),
      #"OnboardingSurveyViews": (UpdateOnBoardingSurveyViews, "OnboardingSurvey"),
      #"OnboardingSurveyNPS": (UpdateOnBoardingSurveyNPS, "OnboardingSurvey"),
