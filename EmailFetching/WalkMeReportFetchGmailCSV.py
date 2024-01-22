@@ -26,14 +26,16 @@ def fetch_csvs_from_today():
         print(f"Error connecting to IMAP server: {e}")
         return []
     # Specific date you want to load emails from
-    specific_date_str = "10-01-2024"
+    specific_date_str = "22-01-2024"
     specific_date_obj = datetime.datetime.strptime(specific_date_str, "%d-%m-%Y")
     # Format for IMAP
     formatted_date_since = specific_date_obj.strftime("%d-%b-%Y")
     formatted_date_before = (specific_date_obj + timedelta(days=1)).strftime("%d-%b-%Y")
 
     today_date = datetime.date.today().strftime("%d-%b-%Y")
+    # Today's date
     result, data = mail.search(None, '(FROM "{}") SINCE {}'.format(SEARCH_SENDER, today_date))
+
     # Search for emails on the specific date
     #query = '(FROM "{}" SINCE {} BEFORE {})'.format(SEARCH_SENDER, formatted_date_since, formatted_date_before)
     #result, data = mail.search(None, query)
