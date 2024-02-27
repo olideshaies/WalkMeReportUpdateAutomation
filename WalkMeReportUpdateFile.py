@@ -128,12 +128,16 @@ class UpdateOnBoardingSurvey(WalkMeReportUpdateFile):
 class UpdateOnBoardingSurveyViews(WalkMeReportUpdateFile):
     def clean_data(self):
         df = pd.read_csv(self.csv_path)
+        #Drop empty account name rows
+        df = df.dropna(subset=['Account Name'])
         # Drop all rows where both 'Users Viewed Surveys' and 'Users Submitted Surveys' are 1
         df = df[~((df['Users Viewed Surveys'] == 1) & (df['Users Submitted Surveys'] == 1))]
         # Get the viewers only
         viewers_only = df[df['Users Submitted Surveys'] == 0]
         # Drop the viewers only from the df
         df = df[~(df['Users Submitted Surveys'] == 0)].reset_index(drop=True)
+        #Drop empty Question rows
+        df = df.dropna(subset=['Question'])
         # Get the list of questions asked grouped by survey
         question_by_survey = df.groupby('Survey ID')['Question'].apply(list).to_dict()
         

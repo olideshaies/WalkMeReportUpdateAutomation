@@ -5,48 +5,26 @@ class OnboardingSurveyViews:
     def __init__(self):
         self.existing_data = None
         self.new_data = None
-
-    def clean_data(self):
-        # You can modify this method based on your cleaning requirements
-        df = self.new_data     
-        # 1 drop columns Number of Survey Submittals & Number of Survey Plays \\
-        # 2 add QuestionDate&Time(Eastern) next to QuestionDate&Time(UTC) just copy same value -4 hours \\ 
-        # 3 move Quesstion to the last column
-        df = df.drop(columns='Number of Survey Submittals') 
-        df = df.drop(columns='Number of Survey Plays')
-        # copy QuestionDate&Time(UTC) to QuestionDate&Time(Eastern) - 4H
-        df['Question Date & Time (UTC)'] = pd.to_datetime(df['Question Date & Time (UTC)'])
-        df['QuestionDate&Time(Eastern)'] = df['Question Date & Time (UTC)'] - pd.Timedelta(hours=4)
-        # Move QuestionDate&Time(Eastern) to the second column
-        colEsternDate = df.pop('QuestionDate&Time(Eastern)')
-        df.insert(4, colEsternDate.name, colEsternDate)
-        # Move Question to the last column
-        colQuestion = df.pop('Question')
-        df.insert(len(df.columns), colQuestion.name, colQuestion)
-        # Order by QuestionDate&Time(UTC)
-        df = df.sort_values(by=['Question Date & Time (UTC)'])
-        #Remove the empty spaces in the column names
-        df.columns = df.columns.str.replace(' ', '')
-        print(f"Data cleaned successfully! 🎉")
-        return df
-
-    def append_new_data(self):
-        new_clean_data = self.clean_data()
-        starting_id = self.existing_data['Id'].max()
-        new_clean_data['Id'] = [starting_id + i for i in range(1, len(new_clean_data) + 1)]
-        updated_data = pd.concat([self.existing_data, new_clean_data], ignore_index=True)
-        return updated_data
     
     def clean_data(self):
         df = self.new_data
+        #Drop empty account name rows
+        df = df.dropna(subset=['Account Name'])
+        # Convert 'Date' column to datetime format (if not already)
+        df['Date'] = pd.to_datetime(df['Date'], errors='coerce')  # 'coerce' turns invalid parsing into NaT
         # Drop all rows where both 'Users Viewed Surveys' and 'Users Submitted Surveys' are 1
         df = df[~((df['Users Viewed Surveys'] == 1) & (df['Users Submitted Surveys'] == 1))]
         # Get the viewers only
         viewers_only = df[df['Users Submitted Surveys'] == 0]
+        print(viewers_only)
         # Drop the viewers only from the df
         df = df[~(df['Users Submitted Surveys'] == 0)].reset_index(drop=True)
+        #drop empty question
+        df = df.dropna(subset=['Question'])
+        print(df)
         # Get the list of questions asked grouped by survey
         question_by_survey = df.groupby('Survey ID')['Question'].apply(list).to_dict()
+        print(question_by_survey)
         
         # Initialize an empty list to collect new rows
         new_rows = []
