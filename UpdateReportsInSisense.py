@@ -21,12 +21,16 @@ logger = logging.getLogger()
 
 REPORT_CLASSES = {
     #ONBOARDING FILES#
-     "OnboardingSurveyComment": (UpdateOnBoardingSurveyComment, "OnboardingSurvey"),
-     "OnboardingSurvey": (UpdateOnBoardingSurvey, "OnboardingSurvey"),
-     "OnboardingSurveyViews": (UpdateOnBoardingSurveyViews, "OnboardingSurvey"),
-     "OnboardingSurveyNPS": (UpdateOnBoardingSurveyNPS, "OnboardingSurvey"),
+    "OnboardingSurveyComment": (UpdateOnBoardingSurveyComment, "OnboardingSurvey"),
+    "OnboardingSurvey": (UpdateOnBoardingSurvey, "OnboardingSurvey"),
+    "OnboardingSurveyViews": (UpdateOnBoardingSurveyViews, "OnboardingSurvey"),
+    "OnboardingSurveyNPS": (UpdateOnBoardingSurveyNPS, "OnboardingSurvey"),
+    #TEACHME FILES#
+    "TeachMeCoursesReport": (UpdateTeachMeCoursesReport, "OnboardingSurvey"),
+    "TeachMeQuizAnswers": (UpdateTeachMeQuizAnswers, "OnboardingSurvey"),
+
     #CONTINUOUS SATISFACTION SCORE FILES#
-    "dbo.ContinuousSatisfactionScore": (UpdateContinuousSatisfactionScore, "ContinuousSatisfactionScore"),
+    #"dbo.ContinuousSatisfactionScore": (UpdateContinuousSatisfactionScore, "ContinuousSatisfactionScore"),
     #NPS FILES#
     # NOT FOR NOW IF REACTIVATING need to change "the name of the survey segmentation"
     #(UNCOMMENT HERE)"dbo.NpsCampaign": (UpdateNPS, "NPS")

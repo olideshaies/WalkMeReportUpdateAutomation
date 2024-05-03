@@ -1,0 +1,12 @@
+2024-03-01 13:38:01,108 - INFO - Email Subject: OnboardingSurveyComment
+2024-03-01 13:38:01,111 - INFO - CSV File Path: temp_csv_files\OnboardingSurveyComment.csv
+2024-03-01 13:38:02,889 - INFO - Email Subject: OnboardingSurvey
+2024-03-01 13:38:02,890 - INFO - CSV File Path: temp_csv_files\OnboardingSurvey.csv
+2024-03-01 13:38:05,265 - INFO - Email Subject: dbo.ContinuousSatisfactionScore
+2024-03-01 13:38:05,266 - INFO - CSV File Path: temp_csv_files\dbo.ContinuousSatisfactionScore.csv
+2024-03-01 13:38:14,842 - INFO - Email Subject: OnboardingSurveyNPS
+2024-03-01 13:38:14,842 - INFO - CSV File Path: temp_csv_files\OnboardingSurveyNPS.csv
+2024-03-01 13:38:15,795 - INFO - Email Subject: OnboardingSurveyViews
+2024-03-01 13:38:15,805 - INFO - CSV File Path: temp_csv_files\OnboardingSurveyViews.csv
+2024-03-01 13:38:24,069 - INFO - Temp_csv_files folder emptied
+2024-03-01 13:38:24,070 - INFO - All files processed

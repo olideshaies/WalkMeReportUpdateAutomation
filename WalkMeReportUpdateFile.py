@@ -220,9 +220,24 @@ class UpdateOnBoardingSurveyNPS(WalkMeReportUpdateFile):
         #NEED TO ADD THE ID NUMBER FOLLOWING THE ORIGINAL FILE (CONTINUE THE NUMBERING)
 
 
-class UpdateOnBoardingSurveyTeachMe(WalkMeReportUpdateFile):
-    pass # TO COME...#
-
+#########################################
+## TEACHME FILES ##
+#########################################
+class UpdateTeachMeCoursesReport(WalkMeReportUpdateFile):
+    def clean_data(self):
+        df = pd.read_csv(self.csv_path)
+        #Remove the empty spaces in the column names
+        df.columns = df.columns.str.replace(' ', '')
+        print(f"Data cleaned for {self.csv_path}")
+        return df
+    
+class UpdateTeachMeQuizAnswers(WalkMeReportUpdateFile):
+    def clean_data(self):
+        df = pd.read_csv(self.csv_path)
+        #Remove the empty spaces in the column names
+        df.columns = df.columns.str.replace(' ', '')
+        print(f"Data cleaned for {self.csv_path}")
+        return df
 
 #########################################
 ## CONTINUOUS SATISFACTION SCORE FILES ##
@@ -262,7 +277,7 @@ class UpdateNPS(WalkMeReportUpdateFile):
         # Drop the Number of Survey Plays
         df = df.drop(columns=['Number of Survey Plays'])
         # Add the SurveySegmentation column & define the new name to add
-        df['SurveySegmentation'] = '3_September_2023'
+        df['SurveySegmentation'] = '4_March_2024'
 
         print("\nData cleaned\n", df.head())
         print(f"Data cleaned for {self.csv_path}")
